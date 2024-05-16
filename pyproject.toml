@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "warc-repo-access"
+name = "aras-py"
 version = "0.1.0"
 description = ""
 license = "GPL-v3.0+"
@@ -19,4 +19,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-aras-py = "warc_repo_access.run:cli"
+aras-py = "aras_py.run:cli"
