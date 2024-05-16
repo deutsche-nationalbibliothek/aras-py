@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "warc-repo-access"
+version = "0.1.0"
+description = ""
+license = "GPL-v3.0+"
+authors = ["Natanael Arndt <arndtn@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+click = "^8.1.7"
+zeep = "^4.2.1"
+httpx = "^0.27.0"
+loguru = "^0.7.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+aras-py = "warc_repo_access.run:cli"
