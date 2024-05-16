@@ -21,7 +21,7 @@ def repositories(ctx):
         r = client.get(f'/access/repositories')
 
     logger.debug(f"{r.request.url}")
-    logger.debug(f"{xml_to_list(r.content)}")
+    print(f"{xml_to_list(r.content)}")
 
 
 @cli.command()
