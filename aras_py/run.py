@@ -31,7 +31,7 @@ def repositories(ctx):
 @click.argument("idn")
 @click.pass_context
 def get(ctx, repository, idn, target_path):
-    """Access the ARAS interface via REST"""
+    """Access the ARAS interface via REST."""
     with ctx.obj["client"] as client:
         r = client.get(f"/access/repositories/{repository}/artifacts/{idn}")
         logger.debug(f"{r.headers["content-disposition"]}")
