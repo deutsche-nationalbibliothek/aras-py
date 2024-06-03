@@ -19,7 +19,7 @@ def cli(ctx, base):
 def repositories(ctx):
     """Access the ARAS interface via REST to list the available repositories."""
     with ctx.obj["client"] as client:
-        r = client.get(f"/access/repositories")
+        r = client.get("/access/repositories")
 
     logger.debug(f"{r.request.url}")
     print(f"{xml_to_list(r.content)}")
