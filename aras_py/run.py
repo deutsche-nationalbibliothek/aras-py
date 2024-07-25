@@ -1,6 +1,8 @@
 from loguru import logger
 import click
 from httpx import Client
+from stream_unzip import stream_unzip
+from to_file_like_obj import to_file_like_obj
 import zipfile
 import io
 from .datastructures import xml_to_list
@@ -32,8 +34,10 @@ def repositories(ctx):
 @click.pass_context
 def get(ctx, repository, idn, target_path):
     """Access the ARAS interface via REST and write it to the filesystem."""
-    for name, bytes in get_bytes(ctx.obj["client"], repository, idn).items():
-        open(f"{target_path}/{idn}_{name}", mode='wb').write(bytes)
+    for name, bytes_io in get_stream(ctx.obj["client"], repository, idn).items():
+        with open(f"{target_path}/{idn}_{name}", mode='wb') as target:
+            with bytes_io as bytes:
+                target.write(bytes.read())
 
 
 def get_bytes(client, repository, idn):
@@ -49,6 +53,19 @@ def get_bytes(client, repository, idn):
         logger.debug(f"{z.infolist()}")
         return {member.filename: z.read(member) for member in z.infolist()}
 
+
+def get_stream(client, repository, idn):
+    """Access the ARAS interface via REST.
+    Get the WARC files of an IDN as file-like-object."""
+    with client as connection:
+        with connection.stream("GET", f"/access/repositories/{repository}/artifacts/{idn}") as r:
+            if "content-disposition" in r.headers:
+                logger.debug(f"{r.headers["content-disposition"]}")
+            logger.debug(f"{r.headers["content-type"]}")
+            # assert r.headers["content-type"] == "application/zip"
+
+            for file_name, file_size, unzipped_chunks in stream_unzip(r.iter_bytes()):
+                yield file_name.decode("utf-8"), to_file_like_obj(unzipped_chunks)
 
 if __name__ == "__main__":
     cli(obj={})
