@@ -34,7 +34,7 @@ def repositories(ctx):
 @click.option("target_path", "--path", default=".")
 @click.argument("idn")
 @click.pass_context
-def get(ctx, repository, idn, target_path):
+def get(ctx, repository, target_path, idn):
     """Access the ARAS interface via REST and write it to the filesystem."""
     for name, bytes_io, metadata in get_stream(ctx.obj["base_url"], repository, idn):
         with open(f"{target_path}/{idn}_{name}", mode='wb') as target, bytes_io() as bytes:
