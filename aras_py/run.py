@@ -8,7 +8,8 @@ from .datastructures import xml_to_list
 import xml.etree.ElementTree as ET
 from contextlib import contextmanager
 
-ns = {'mets': 'http://www.loc.gov/METS/', "xlink": "http://www.w3.org/1999/xlink"}
+ns = {"mets": "http://www.loc.gov/METS/", "xlink": "http://www.w3.org/1999/xlink"}
+
 
 @click.group()
 @click.option("--base", envvar="ARAS_REST_BASE")
@@ -37,10 +38,14 @@ def repositories(ctx):
 def get(ctx, repository, target_path, idn):
     """Access the ARAS interface via REST and write it to the filesystem."""
     for name, bytes_io, metadata in get_stream(ctx.obj["base_url"], repository, idn):
-        with open(f"{target_path}/{idn}_{name}", mode='wb') as target, bytes_io() as bytes:
+        with open(
+            f"{target_path}/{idn}_{name}", mode="wb"
+        ) as target, bytes_io() as bytes:
             logger.info(f"Prepare file write with size: {metadata["size"]}")
             with Progress() as progress:
-                task = progress.add_task(f"[blue]Downloading {name}...", total=metadata["size"])
+                task = progress.add_task(
+                    f"[blue]Downloading {name}...", total=metadata["size"]
+                )
                 while True:
                     chunk = bytes.read(io.DEFAULT_BUFFER_SIZE)
                     if chunk:
@@ -64,17 +69,24 @@ def get_stream(base_url, repository, idn):
             logger.debug(f"file: {file}")
             id = file.attrib["ID"]
             size = int(file.attrib["SIZE"])
-            file_name = file.find("./mets:FLocat[@LOCTYPE='URL']", ns).get(f"{{{ns["xlink"]}}}href")
+            file_name = file.find("./mets:FLocat[@LOCTYPE='URL']", ns).get(
+                f"{{{ns["xlink"]}}}href"
+            )
             logger.debug(f"file_name: {file_name}")
 
             @contextmanager
             def stream_lambda():
                 logger.debug(f"base_url: {base_url}")
                 with Client(base_url=base_url) as new_connection:
-                    with new_connection.stream("GET", f"/access/repositories/{repository}/artifacts/{idn}/objects/{id}") as r:
+                    with new_connection.stream(
+                        "GET",
+                        f"/access/repositories/{repository}/artifacts/{idn}/objects/{id}",
+                    ) as r:
                         logger.debug(f"r: {r.url}")
                         yield to_file_like_obj(r.iter_bytes())
+
             yield file_name, stream_lambda, {"size": size}
+
 
 if __name__ == "__main__":
     cli(obj={})
