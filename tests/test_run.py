@@ -1,4 +1,3 @@
-from loguru import logger
 from httpx import Response
 from textwrap import dedent
 import pytest

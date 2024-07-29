@@ -2,7 +2,6 @@ from loguru import logger
 import click
 from httpx import Client
 from to_file_like_obj import to_file_like_obj
-import zipfile
 import io
 from rich.progress import Progress
 from .datastructures import xml_to_list
@@ -40,7 +39,6 @@ def get(ctx, repository, idn, target_path):
     for name, bytes_io, metadata in get_stream(ctx.obj["base_url"], repository, idn):
         with open(f"{target_path}/{idn}_{name}", mode='wb') as target, bytes_io() as bytes:
             logger.info(f"Prepare file write with size: {metadata["size"]}")
-            # with wrap_file(bytes_io(), total=metadata["size"]) as bytes:
             with Progress() as progress:
                 task = progress.add_task(f"[blue]Downloading {name}...", total=metadata["size"])
                 while True:
@@ -50,24 +48,6 @@ def get(ctx, repository, idn, target_path):
                         progress.update(task, advance=io.DEFAULT_BUFFER_SIZE)
                     else:
                         break
-
-            logger.info("Write file")
-            # for chunk in bytes:
-            target.write(bytes.read())
-
-
-def get_bytes(base_url, repository, idn):
-    """Access the ARAS interface via REST.
-    Get the WARC files of an IDN as bytes."""
-    with Client(base_url=base_url) as connection:
-        r = connection.get(f"/access/repositories/{repository}/artifacts/{idn}")
-        logger.debug(f"{r.headers["content-disposition"]}")
-        logger.debug(f"{r.headers["content-type"]}")
-        assert r.headers["content-type"] == "application/zip"
-        z = zipfile.ZipFile(io.BytesIO(r.content))
-        logger.debug(f"{z.namelist()}")
-        logger.debug(f"{z.infolist()}")
-        return {member.filename: z.read(member) for member in z.infolist()}
 
 
 def get_stream(base_url, repository, idn):
