@@ -76,9 +76,6 @@ def get_stream(base_url, repository, idn):
     with Client(base_url=base_url) as connection:
         r = connection.get(f"/access/repositories/{repository}/artifacts/{idn}/objects")
         logger.debug(f"content: {r.content}")
-    with Client(base_url=base_url) as connection:
-        r = connection.get(f"/access/repositories/{repository}/artifacts/{idn}/objects")
-        logger.debug(f"content: {r.content}")
         tree = ET.fromstring(r.content)
         logger.debug(f"tree: {tree}")
         files = tree.findall("./mets:fileSec/mets:fileGrp/mets:file", ns)
