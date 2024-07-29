@@ -55,9 +55,9 @@ def test_aras_get_stream(respx_mock):
 
     stream_iter = get_stream(test_base_url, repository, idn)
 
-    name, stream, options = next(stream_iter)
+    name, stream, metadata = next(stream_iter)
     with stream() as bytes_io:
         bytes_io.read() == example_content_0.encode("utf-8")
-    name, stream, options = next(stream_iter)
+    name, stream, metadata = next(stream_iter)
     with stream() as bytes_io:
         bytes_io.read() == example_content_1.encode("utf-8")
