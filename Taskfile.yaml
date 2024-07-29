@@ -1,0 +1,19 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List all tasks
+    cmds:
+      - task -a
+
+  format:
+    desc: Format the code
+    aliases: ["ruff"]
+    cmds:
+      - poetry run ruff format
+      - poetry run ruff check --fix
+
+  test:
+    desc: Run tests
+    cmds:
+      - poetry run pytest
