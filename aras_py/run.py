@@ -60,11 +60,8 @@ def get_stream(base_url, repository, idn):
     Get the WARC files of an IDN as file-like-object."""
     with Client(base_url=base_url) as connection:
         r = connection.get(f"/access/repositories/{repository}/artifacts/{idn}/objects")
-        logger.debug(f"content: {r.content}")
         tree = ET.fromstring(r.content)
-        logger.debug(f"tree: {tree}")
         files = tree.findall("./mets:fileSec/mets:fileGrp/mets:file", ns)
-        logger.debug(f"files: {files}")
         for file in files:
             logger.debug(f"file: {file}")
             id = file.attrib["ID"]
@@ -82,7 +79,6 @@ def get_stream(base_url, repository, idn):
                         "GET",
                         f"/access/repositories/{repository}/artifacts/{idn}/objects/{id}",
                     ) as r:
-                        logger.debug(f"r: {r.url}")
                         yield to_file_like_obj(r.iter_bytes())
 
             yield file_name, stream_lambda, {"size": size}
