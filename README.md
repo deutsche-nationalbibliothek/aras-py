@@ -1,12 +1,6 @@
 # Access the Repository via ARAS
 
-This tool helps to retrieve artifacts from the DNB Repository via ARAS.
-
-See:
-- http://etc.dnb.de/aras/
-- https://wiki.dnb.de/display/FACHBEREICHIT/Version+2.x
-
-There is a SOAP interface but the WSDL does not work, so we do it with REST.
+This tool helps to retrieve artifacts from the DNB Repository via ARAS via its REST interface.
 
 This projects uses [poetry](https://python-poetry.org/).
 
