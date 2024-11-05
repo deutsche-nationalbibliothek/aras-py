@@ -2,6 +2,8 @@
 
 This tool helps to retrieve artifacts from the DNB Repository via ARAS via its REST interface.
 
+To test the interplay you can mock an ARAS REST API with [mockils](https://github.com/deutsche-nationalbibliothek/mockils).
+
 This projects uses [poetry](https://python-poetry.org/).
 
 ## Installation
