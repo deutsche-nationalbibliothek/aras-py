@@ -62,6 +62,8 @@ def get_stream(base_url, repository, idn):
         r = connection.get(f"/access/repositories/{repository}/artifacts/{idn}/objects")
         tree = ET.fromstring(r.content)
         files = tree.findall("./mets:fileSec/mets:fileGrp/mets:file", ns)
+        if not files:
+            logger.debug(f"Could not find any files in: {r.content}")
         for file in files:
             logger.debug(f"file: {file}")
             id = file.attrib["ID"]
