@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-click = "^8.1.7"
+click = "^8.1.8"
 httpx = "^0.28.1"
 loguru = "^0.7.2"
 to-file-like-obj = "^0.0.6"
