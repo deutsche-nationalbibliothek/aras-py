@@ -4,10 +4,10 @@ name: OCI Publish
 
 on:
   push:
-    branches: [ "master", "feature/*" ]
+    branches: [ "main", "feature/*" ]
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ "master", "feature/*" ]
+    branches: [ "main", "feature/*" ]
   workflow_dispatch:
 
 env:
